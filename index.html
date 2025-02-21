@@ -4,10 +4,17 @@
     <title>AI对话练习</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" type="image/x-icon" href="data:image/x-icon;,">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
     <div class="container">
-        <div id="scenario" class="scenario"></div>
+        <div class="scenario-container">
+            <div id="scenario" class="scenario"></div>
+            <button id="refreshButton" onclick="initializeScenario()" class="refresh-button">
+                换个场景
+            </button>
+        </div>
         <div id="conversation" class="conversation"></div>
         <div class="input-area">
             <input type="text" id="userInput" placeholder="输入你想说的话...">
