@@ -52,6 +52,43 @@ async function initializeScenario() {
     }
 }
 
+// 添加自定义场景相关函数
+function showCustomDialog() {
+    document.getElementById('customDialog').classList.remove('hidden');
+}
+
+function hideCustomDialog() {
+    document.getElementById('customDialog').classList.add('hidden');
+}
+
+async function applyCustomScenario() {
+    const customScene = document.getElementById('customScene').value.trim();
+    const customCharacter = document.getElementById('customCharacter').value.trim();
+    
+    if (!customScene || !customCharacter) {
+        alert('请填写场景和对话对象描述');
+        return;
+    }
+    
+    // 清除对话历史
+    conversationHistory = [];
+    document.getElementById('conversation').innerHTML = '';
+    
+    // 设置新场景
+    currentScenario = customScene;
+    currentCharacter = customCharacter;
+    
+    // 更新显示
+    document.getElementById('scenario').innerHTML = `
+        <h3>Scene：${currentScenario}</h3>
+        <p>Character：${currentCharacter}</p>
+        <p class="hint">点击"换个场景"按钮可以更换场景和对话对象</p>
+    `;
+    
+    // 隐藏对话框
+    hideCustomDialog();
+}
+
 // 发送消息
 async function sendMessage() {
     const userInput = document.getElementById('userInput').value;
