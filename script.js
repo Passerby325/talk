@@ -19,6 +19,9 @@ function cleanResponseText(text) {
 // 修改初始化场景函数
 async function initializeScenario() {
     try {
+        // 清除对话历史
+        conversationHistory = [];
+        document.getElementById('conversation').innerHTML = '';
         document.getElementById('scenario').innerHTML = '<p>Loading...</p>';
         
         const prompt = `生成一个英语口语练习的场景。
@@ -27,13 +30,13 @@ async function initializeScenario() {
 2. 角色要简单明确，只需一个角色
 请按以下格式返回JSON：
 {
-    "scene": "场景描述（英文）",
-    "character": "角色描述（英文）"
+"scene": "Scene description ",
+"character": "Description of the character that talks to the player"
 }
 示例：
 {
-    "scene": "在咖啡店里，顾客们正排队点餐，空气中弥漫着咖啡香和和轻柔的背景音乐。（英文）",
-    "character": "一位20多岁的友善咖啡师战争柜台后，微笑着为每位顾客服务。 （英文）"
+    "scene": "In the coffee shop, customers are lining up to order, and the air is filled with the aroma of coffee and gentle background music.",
+    "character": "A male barista in his twenties stands behind the counter, smiling as he serves every customer."
 }`;
 
         const rawResponse = await fetchGeminiResponse(prompt);
@@ -58,8 +61,9 @@ async function initializeScenario() {
             currentCharacter = scenario.character;
             
             document.getElementById('scenario').innerHTML = `
-                <h3>场景：${currentScenario}</h3>
-                <p>对话对象：${currentCharacter}</p>
+                <h3>Scene：${currentScenario}</h3>
+                <p>Characyer：${currentCharacter}</p>
+                <p class="hint">点击"换个场景"按钮可以更换场景和对话对象</p>
             `;
         } catch (parseError) {
             console.error('JSON解析失败:', parseError);
