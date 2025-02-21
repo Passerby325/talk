@@ -19,21 +19,21 @@ function cleanResponseText(text) {
 // 修改初始化场景函数
 async function initializeScenario() {
     try {
-        document.getElementById('scenario').innerHTML = '<p>正在加载场景...</p>';
+        document.getElementById('scenario').innerHTML = '<p>Loading...</p>';
         
         const prompt = `生成一个英语口语练习的场景。
 要求：
-1. 场景要简短具体
+1. 场景要具体，但描述不会超过三句
 2. 角色要简单明确，只需一个角色
 请按以下格式返回JSON：
 {
-    "scene": "场景描述（中文）",
-    "character": "角色描述（中文）"
+    "scene": "场景描述（英文）",
+    "character": "角色描述（英文）"
 }
 示例：
 {
-    "scene": "在咖啡店排队点餐",
-    "character": "一位友善的咖啡师，20多岁"
+    "scene": "在咖啡店里，顾客们正排队点餐，空气中弥漫着咖啡香和和轻柔的背景音乐。（英文）",
+    "character": "一位20多岁的友善咖啡师战争柜台后，微笑着为每位顾客服务。 （英文）"
 }`;
 
         const rawResponse = await fetchGeminiResponse(prompt);
@@ -88,7 +88,7 @@ async function sendMessage() {
     
     // 检查用户表达
     const checkPrompt = `
-        分析以下英语表达是否正确，如果有语法错误请指出。
+        分析以下英语表达是否正确，如果有语法错误或是更适合的讲法请指出。
         同时，请理解说话者想表达的意思，用简单的中文概括。
         回复必须是格式正确的JSON字符串：{
             "isCorrect": boolean,
@@ -143,7 +143,7 @@ async function confirmMeaning(isCorrect) {
     } else {
         // 生成AI回复
         const replyPrompt = `
-            基于以下场景和对话历史，生成角色的回复：
+            基于以下场景和对话历史，扮演角色并生成角色的回复：
             场景：${currentScenario}
             角色：${currentCharacter}
             对话历史：${JSON.stringify(conversationHistory)}
