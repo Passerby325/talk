@@ -1,116 +1,258 @@
-const scenariosData = [
-    "In a cozy coffee shop with the aroma of freshly ground beans in the air",
-    "At a bustling train station platform during rush hour",
-    "Inside a quiet library with sunlight streaming through tall windows",
-    "At a neighborhood grocery store's produce section",
-    "In a modern gym during peak evening hours",
-    "At a busy airport terminal near the departure gates",
-    "In a local park on a sunny afternoon",
-    "At a popular food truck during lunch hour",
-    "Inside a vintage record store browsing vinyl collections",
-    "At a pet shop looking at adorable puppies",
-    "In a high-end restaurant during dinner service",
-    "At a movie theater concession stand",
-    "Inside a tech store checking out the latest gadgets",
-    "At a bakery early in the morning",
-    "In a hotel lobby during check-in time",
-    "At a bus stop on a rainy morning",
-    "Inside an art gallery during an exhibition",
-    "At a farmers market on weekend morning",
-    "In a dental office waiting room",
-    "At a beachside ice cream stand",
-    "Inside a shopping mall during a sale",
-    "At a flower shop arranging bouquets",
-    "In a doctor's office for a check-up",
-    "At a car wash on a busy Saturday",
-    "Inside a pizza parlor during dinner rush",
-    "At a bank waiting in line",
-    "In a yoga studio before class",
-    "At a hair salon getting a haircut",
-    "Inside a bookstore's reading corner",
-    "At a post office mailing packages",
-    "In a bowling alley on league night",
-    "At an ice skating rink watching beginners",
-    "Inside a music store testing instruments",
-    "At a tailoring shop getting measurements",
-    "In a dance studio during lessons",
-    "At a bike shop looking for repairs",
-    "Inside a candy store with endless choices",
-    "At a sports bar during a big game",
-    "In a photography studio during a session",
-    "At a shoe store trying on new shoes",
-    "Inside a comic book store on release day",
-    "At a wedding dress boutique",
-    "In a garden center picking plants",
-    "At a language school reception",
-    "Inside a sushi restaurant at the counter",
-    "At a laundromat folding clothes",
-    "In a computer repair shop",
-    "At a jewelry store browsing rings",
-    "Inside an arcade playing games",
-    "At a camping store getting supplies"
+const scenarioData = [
+    {
+        scene: "In a cozy coffee shop with the aroma of freshly ground beans in the air",
+        possibleCharacters: [
+            "A cheerful barista who's passionate about coffee art",
+            "A cafe manager organizing the morning shift",
+            "A veteran barista known for perfect espresso shots"
+        ]
+    },
+    {
+        scene: "Inside a quiet library with sunlight streaming through tall windows",
+        possibleCharacters: [
+            "A friendly librarian who knows every book by heart",
+            "A research librarian helping with academic papers",
+            "A children's librarian preparing for story time"
+        ]
+    },
+    {
+        scene: "At a busy airport terminal near the departure gates",
+        possibleCharacters: [
+            "An experienced flight attendant helping passengers",
+            "A friendly gate agent managing the boarding process",
+            "An airport information desk staff member"
+        ]
+    },
+    {
+        scene: "In a modern gym during peak evening hours",
+        possibleCharacters: [
+            "A motivating personal trainer planning workout routines",
+            "A gym receptionist helping with membership inquiries",
+            "A fitness instructor preparing for a group class"
+        ]
+    },
+    {
+        scene: "At a local park on a sunny afternoon",
+        possibleCharacters: [
+            "A friendly ice cream vendor with a colorful cart",
+            "A park ranger giving directions to visitors",
+            "A dog walker offering professional walking services"
+        ]
+    },
+    {
+        scene: "Inside a busy restaurant kitchen during dinner service",
+        possibleCharacters: [
+            "A head chef coordinating meal preparations",
+            "A friendly waiter taking special orders",
+            "A skilled sous chef managing the grill station"
+        ]
+    },
+    {
+        scene: "At a neighborhood grocery store's produce section",
+        possibleCharacters: [
+            "A produce manager arranging fresh vegetables",
+            "A helpful staff member offering recipe suggestions",
+            "A friendly cashier at the express checkout"
+        ]
+    },
+    {
+        scene: "In a phone repair shop with various devices on display",
+        possibleCharacters: [
+            "A tech-savvy repair specialist diagnosing issues",
+            "A shop owner explaining warranty policies",
+            "A customer service rep handling device pickups"
+        ]
+    },
+    {
+        scene: "At a boutique clothing store during a sale",
+        possibleCharacters: [
+            "A fashion-conscious sales associate suggesting outfits",
+            "A personal stylist helping with selections",
+            "A friendly fitting room attendant"
+        ]
+    },
+    {
+        scene: "Inside a movie theater before the show",
+        possibleCharacters: [
+            "A cheerful concession stand worker",
+            "A helpful ticket taker checking seats",
+            "A theater manager ensuring everything runs smoothly"
+        ]
+    },
+    {
+        scene: "At a pet shop with puppies playing in the window",
+        possibleCharacters: [
+            "A knowledgeable pet care specialist",
+            "A veterinary technician doing health checks",
+            "A pet adoption coordinator matching pets with families"
+        ]
+    },
+    {
+        scene: "In a busy dental office waiting room",
+        possibleCharacters: [
+            "A friendly dental receptionist checking appointments",
+            "A dental hygienist explaining cleaning procedures",
+            "A patient coordinator discussing treatment plans"
+        ]
+    },
+    {
+        scene: "At a hotel front desk during check-in time",
+        possibleCharacters: [
+            "A professional hotel receptionist handling check-ins",
+            "A concierge sharing local recommendations",
+            "A helpful bellhop assisting with luggage"
+        ]
+    },
+    {
+        scene: "Inside a music store with instruments on display",
+        possibleCharacters: [
+            "A passionate guitar expert demonstrating techniques",
+            "A piano teacher scheduling lessons",
+            "A music store owner sharing instrument care tips"
+        ]
+    },
+    {
+        scene: "At a bustling train station platform",
+        possibleCharacters: [
+            "A station attendant announcing departures",
+            "A helpful information desk officer",
+            "A ticket inspector checking passes"
+        ]
+    },
+    {
+        scene: "At a swimming pool during afternoon lessons",
+        possibleCharacters: [
+            "A certified swimming instructor teaching beginners",
+            "A lifeguard monitoring pool safety",
+            "A pool manager organizing class schedules"
+        ]
+    },
+    {
+        scene: "Inside an art supply store with colorful displays",
+        possibleCharacters: [
+            "An experienced artist recommending materials",
+            "A craft specialist demonstrating techniques",
+            "A store clerk organizing new shipments"
+        ]
+    },
+    {
+        scene: "At a busy car service center",
+        possibleCharacters: [
+            "A skilled mechanic explaining repairs",
+            "A service advisor scheduling maintenance",
+            "A parts specialist checking inventory"
+        ]
+    },
+    {
+        scene: "In a cozy bookstore cafe corner",
+        possibleCharacters: [
+            "A book club coordinator organizing events",
+            "A literature enthusiast recommending reads",
+            "A cafe-bookstore manager arranging displays"
+        ]
+    },
+    {
+        scene: "At a photography studio during a session",
+        possibleCharacters: [
+            "A professional photographer directing poses",
+            "A lighting specialist adjusting equipment",
+            "A photo editor showing sample portfolios"
+        ]
+    },
+    {
+        scene: "Inside a mobile phone store",
+        possibleCharacters: [
+            "A tech expert comparing phone features",
+            "A sales representative explaining plans",
+            "A device specialist setting up new phones"
+        ]
+    },
+    {
+        scene: "At a language learning center",
+        possibleCharacters: [
+            "An experienced language teacher conducting class",
+            "A program coordinator assessing levels",
+            "A conversation practice partner"
+        ]
+    },
+    {
+        scene: "In a bakery early morning",
+        possibleCharacters: [
+            "A pastry chef arranging fresh displays",
+            "A bread baker sharing recipe tips",
+            "A cake decorator taking custom orders"
+        ]
+    },
+    {
+        scene: "At a sports equipment store",
+        possibleCharacters: [
+            "A sports equipment specialist fitting gear",
+            "A running shoe expert analyzing gaits",
+            "A team sports coordinator handling bulk orders"
+        ]
+    },
+    {
+        scene: "Inside a travel agency office",
+        possibleCharacters: [
+            "A travel consultant planning vacations",
+            "A cruise specialist describing packages",
+            "A adventure tour expert sharing experiences"
+        ]
+    },
+    {
+        scene: "At a wine shop's tasting counter",
+        possibleCharacters: [
+            "A wine sommelier conducting tastings",
+            "A vintage specialist describing collections",
+            "A shop owner sharing wine pairing tips"
+        ]
+    },
+    {
+        scene: "In a dance studio before class",
+        possibleCharacters: [
+            "A dance instructor warming up students",
+            "A choreographer teaching new routines",
+            "A studio manager organizing schedules"
+        ]
+    },
+    {
+        scene: "At an ice cream parlor on a hot day",
+        possibleCharacters: [
+            "A friendly server suggesting flavors",
+            "A dessert specialist creating sundaes",
+            "A shop owner introducing new tastes"
+        ]
+    },
+    {
+        scene: "Inside a nail salon during busy hours",
+        possibleCharacters: [
+            "A nail artist showing design options",
+            "A salon manager scheduling appointments",
+            "A manicurist discussing treatments"
+        ]
+    },
+    {
+        scene: "At a bicycle repair workshop",
+        possibleCharacters: [
+            "A bike mechanic fixing gears",
+            "A cycling expert recommending routes",
+            "A shop owner discussing maintenance"
+        ]
+    }
 ];
 
-const charactersData = [
-    "A cheerful barista who's passionate about coffee art",
-    "A friendly librarian who knows every book by heart",
-    "A patient yoga instructor guiding new students",
-    "A busy chef preparing special orders",
-    "An enthusiastic tour guide sharing local history",
-    "A knowledgeable wine sommelier at a fine restaurant",
-    "A creative hairstylist discussing new trends",
-    "A passionate music teacher giving lessons",
-    "A helpful tech support specialist solving problems",
-    "A caring veterinarian examining pets",
-    "A skilled personal trainer motivating clients",
-    "A detail-oriented tailor measuring for suits",
-    "A professional photographer setting up shots",
-    "A gentle dental hygienist explaining procedures",
-    "A friendly bank teller processing transactions",
-    "A enthusiastic dance instructor teaching steps",
-    "A patient driving instructor giving tips",
-    "A knowledgeable car mechanic explaining repairs",
-    "A creative florist arranging bouquets",
-    "A helpful hotel concierge giving recommendations",
-    "A experienced flight attendant helping passengers",
-    "A friendly bus driver greeting passengers",
-    "A skilled bike mechanic fixing gears",
-    "A passionate art gallery curator",
-    "A helpful bookstore owner recommending books",
-    "A professional real estate agent showing homes",
-    "A friendly neighborhood mail carrier",
-    "A skilled jeweler designing custom pieces",
-    "A knowledgeable gardener sharing plant tips",
-    "A patient language teacher explaining grammar",
-    "A creative tattoo artist discussing designs",
-    "A helpful pharmacy technician filling prescriptions",
-    "A professional optometrist conducting eye exams",
-    "A friendly movie theater usher",
-    "A skilled shoe repair specialist",
-    "A passionate comic book store owner",
-    "A helpful travel agent planning trips",
-    "A knowledgeable antique dealer",
-    "A friendly ice cream vendor on the beach",
-    "A professional dog trainer working with pets",
-    "A creative cake decorator designing desserts",
-    "A skilled massage therapist",
-    "A helpful gym receptionist",
-    "A passionate music store owner",
-    "A friendly food truck operator",
-    "A professional wedding planner",
-    "A knowledgeable wine shop owner",
-    "A helpful computer repair technician",
-    "A friendly movie ticket seller",
-    "A skilled skateboard shop owner"
-];
-
-// 随机匹配函数
+// 修改随机匹配函数
 function getRandomScenario() {
-    const randomSceneIndex = Math.floor(Math.random() * scenariosData.length);
-    const randomCharacterIndex = Math.floor(Math.random() * charactersData.length);
+    // 随机选择场景
+    const randomSceneIndex = Math.floor(Math.random() * scenarioData.length);
+    const selectedScenario = scenarioData[randomSceneIndex];
+    
+    // 从该场景的可能角色中随机选择一个
+    const randomCharacterIndex = Math.floor(Math.random() * selectedScenario.possibleCharacters.length);
+    const selectedCharacter = selectedScenario.possibleCharacters[randomCharacterIndex];
     
     return {
-        scene: scenariosData[randomSceneIndex],
-        character: charactersData[randomCharacterIndex]
+        scene: selectedScenario.scene,
+        character: selectedCharacter
     };
 }
