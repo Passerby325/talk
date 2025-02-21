@@ -24,16 +24,16 @@ async function initializeScenario() {
         document.getElementById('conversation').innerHTML = '';
         document.getElementById('scenario').innerHTML = '<p>Loading...</p>';
         
-        const prompt = `生成一个英语口语练习的场景。
-要求：
-1. 场景要具体，但描述不会超过三句
-2. 角色要简单明确，只需一个角色
-请按以下格式返回JSON：
+        const prompt = `Generate an English conversation scenario.
+Requirements:
+1. Scene description should be specific but not more than 3 sentences
+2. Only one character who ONLY speaks English
+Format:
 {
-"scene": "Scene description ",
-"character": "Description of the character that talks to the player"
+"scene": "Scene description",
+"character": "Character description"
 }
-示例：
+Example:
 {
     "scene": "In the coffee shop, customers are lining up to order, and the air is filled with the aroma of coffee and gentle background music.",
     "character": "A male barista in his twenties stands behind the counter, smiling as he serves every customer."
@@ -94,10 +94,11 @@ async function sendMessage() {
     const checkPrompt = `
         分析以下英语表达是否正确，如果有语法错误或是更适合的讲法请指出。
         同时，请理解说话者想表达的意思，用简单的中文概括。
+        如果有多个语法点或建议，请分点列出。
         回复必须是格式正确的JSON字符串：{
             "isCorrect": boolean,
             "intendedMeaning": "中文说明",
-            "correction": "如果有错误，给出修正建议，如果正确则为空"
+            "correction": ["改进点1", "改进点2", "..."] // 数组格式，每个元素是一个独立的改进建议
         }
         用户输入：${userInput}
     `;
@@ -111,8 +112,12 @@ async function sendMessage() {
             document.getElementById('meaningCheck').textContent = analysis.intendedMeaning;
             document.getElementById('confirmation').classList.remove('hidden');
             
-            if (!analysis.isCorrect) {
-                addMessageToConversation(`语法提示：${analysis.correction}`, 'system');
+            if (!analysis.isCorrect && Array.isArray(analysis.correction)) {
+                // 分段显示每个语法提示
+                const corrections = analysis.correction
+                    .map((item, index) => `${index + 1}. ${item}`)
+                    .join('\n');
+                addMessageToConversation(`语法提示：\n${corrections}`, 'system');
             }
         } catch (parseError) {
             console.error('JSON解析失败:', parseError);
@@ -134,23 +139,54 @@ async function confirmMeaning(isCorrect) {
         if (userIntent) {
             const correctionPrompt = `
                 用户想用英语表达："${userIntent}"
-                请提供正确的英语表达方式。
+                请提供多个可能的正确英语表达方式。
+                对每种表达方式进行简要说明。
+                回复格式为JSON：
+                {
+                    "suggestions": [
+                        {
+                            "expression": "英语表达",
+                            "explanation": "解释说明，用中文"
+                        }
+                    ]
+                }
             `;
             
             try {
                 const suggestion = await fetchGeminiResponse(correctionPrompt);
-                addMessageToConversation(`建议表达：${suggestion}`, 'system');
+                const cleanedSuggestion = cleanResponseText(suggestion);
+                const suggestions = JSON.parse(cleanedSuggestion);
+                
+                if (Array.isArray(suggestions.suggestions)) {
+                    const formattedSuggestions = suggestions.suggestions
+                        .map((item, index) => 
+                            `${index + 1}. ${item.expression}\n   说明：${item.explanation}`
+                        )
+                        .join('\n\n');
+                    
+                    addMessageToConversation(`建议表达：\n${formattedSuggestions}`, 'system');
+                }
             } catch (error) {
                 console.error('获取建议失败:', error);
+                addMessageToConversation('抱歉，获取表达建议失败', 'system');
             }
         }
     } else {
         // 生成AI回复
         const replyPrompt = `
-            基于以下场景和对话历史，扮演角色并生成角色的回复：
-            场景：${currentScenario}
-            角色：${currentCharacter}
-            对话历史：${JSON.stringify(conversationHistory)}
+            As the character described below, generate a natural English response.
+            The character ONLY speaks English and responds as a native English speaker.
+            
+            Scene: ${currentScenario}
+            Character: ${currentCharacter}
+            Conversation history: ${JSON.stringify(conversationHistory)}
+            
+            Generate a natural, conversational English response that:
+            1. Fits the character's role and personality
+            2. Is appropriate for the scene
+            3. Maintains natural conversation flow
+            4. Uses common English expressions
+            Response should be in plain text, no JSON formatting needed.
         `;
         
         try {
