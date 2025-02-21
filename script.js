@@ -1,5 +1,5 @@
 // Gemini API配置
-const API_KEY = 'YOUAIzaSyBow4KtOLkmFYThs0YkwTCb7eOZvfZ6Lk8'; // 替换为你的API密钥
+const API_KEY = 'AIzaSyA7JRZ1wssbb07dgTAJ2Ut1t-r0t4bKR4M'; // 替换为你的API密钥
 const API_URL = 'https://generativelanguage.googleapis.com/gemini-pro:generateContent';
 
 let currentScenario = '';
