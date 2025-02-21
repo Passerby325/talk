@@ -1,12 +1,17 @@
 body {
     font-family: Arial, sans-serif;
     margin: 0;
-    padding: 20px;
+    padding: 10px;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 .container {
     max-width: 800px;
     margin: 0 auto;
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .scenario {
@@ -14,20 +19,49 @@ body {
     padding: 15px;
     border-radius: 5px;
     margin-bottom: 20px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.scenario-container {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.refresh-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #4CAF50;
+    padding: 8px 15px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.refresh-button:hover {
+    background: #45a049;
 }
 
 .conversation {
-    height: 400px;
+    height: calc(50vh - 100px);
     overflow-y: auto;
     border: 1px solid #ccc;
     padding: 10px;
     margin-bottom: 20px;
+    min-height: 300px;
 }
 
 .message {
     margin: 10px 0;
     padding: 10px;
     border-radius: 5px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
 }
 
 .user-message {
@@ -43,11 +77,13 @@ body {
 .input-area {
     display: flex;
     gap: 10px;
+    flex-wrap: wrap;
 }
 
 #userInput {
     flex: 1;
     padding: 10px;
+    min-width: 200px;
 }
 
 button {
@@ -57,6 +93,8 @@ button {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    min-height: 44px;
+    touch-action: manipulation;
 }
 
 .confirmation {
@@ -68,4 +106,58 @@ button {
 
 .hidden {
     display: none;
+}
+
+/* 媒体查询 - 移动设备 */
+@media screen and (max-width: 600px) {
+    body {
+        padding: 5px;
+    }
+
+    .container {
+        padding: 5px;
+    }
+
+    .refresh-button {
+        position: static;
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .message {
+        margin: 5px 0;
+    }
+
+    .user-message {
+        margin-left: 10%;
+    }
+
+    .ai-message {
+        margin-right: 10%;
+    }
+
+    .input-area {
+        flex-direction: column;
+    }
+
+    #userInput {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .input-area button {
+        width: 100%;
+    }
+
+    .confirmation button {
+        width: 100%;
+        margin: 5px 0;
+    }
+}
+
+/* 媒体查询 - 平板设备 */
+@media screen and (min-width: 601px) and (max-width: 1024px) {
+    .container {
+        max-width: 95%;
+    }
 }
