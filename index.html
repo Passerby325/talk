@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI对话练习</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div id="scenario" class="scenario"></div>
+        <div id="conversation" class="conversation"></div>
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="输入你想说的话...">
+            <button onclick="sendMessage()">发送</button>
+        </div>
+        <div id="confirmation" class="confirmation hidden">
+            <p>你是想表达：<span id="meaningCheck"></span></p>
+            <button onclick="confirmMeaning(true)">是的</button>
+            <button onclick="confirmMeaning(false)">不是</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
