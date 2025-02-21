@@ -4,6 +4,7 @@ body {
     padding: 10px;
     max-width: 100%;
     box-sizing: border-box;
+    background-color: #F5FFFA; /* 薄荷奶昔色 */
 }
 
 .container {
@@ -12,10 +13,13 @@ body {
     padding: 10px;
     width: 100%;
     box-sizing: border-box;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    border-radius: 8px;
 }
 
 .scenario {
-    background: #f0f0f0;
+    background: #E0FFF5; /* 浅薄荷色 */
     padding: 15px;
     border-radius: 5px;
     margin-bottom: 20px;
@@ -69,19 +73,19 @@ body {
 }
 
 .user-message {
-    background: #e3f2fd;
+    background: #E0FFF5; /* 浅薄荷色 */
     margin-left: 20%;
 }
 
 .ai-message {
-    background: #f5f5f5;
+    background: #ffffff;
     margin-right: 20%;
 }
 
 .system-message {
-    background: #fff3cd;
+    background: #F0FFF8; /* 非常浅的薄荷色 */
     padding: 15px;
-    border-left: 4px solid #ffc107;
+    border-left: 4px solid #98FFD8; /* 深一点的薄荷色 */
     margin: 10px 0;
 }
 
