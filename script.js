@@ -63,12 +63,13 @@ async function sendMessage() {
     // 检查用户表达
     const checkPrompt = `
         Analyze this English expression. If there are any grammar errors or better ways to express it, point them out.
-        Also, provide a simple Chinese summary of what the speaker wants to say.
+        Also, provide a simple Chinese summary and the correct/recommended expression.
         Response must be in this JSON format:
         {
             "isCorrect": boolean,
             "intendedMeaning": "中文说明",
-            "correction": ["改进点1", "改进点2", "..."]
+            "correction": ["改进点1", "改进点2", "..."],
+            "recommendedExpression": "The correct/better way to express this"
         }
         User input: "${userInput}"
     `;
@@ -86,7 +87,8 @@ async function sendMessage() {
                 const corrections = analysis.correction
                     .map((item, index) => `${index + 1}. ${item}`)
                     .join('\n');
-                addMessageToConversation(`语法提示：\n${corrections}`, 'system');
+                const message = `语法提示：\n${corrections}\n\n推荐表达：\n"${analysis.recommendedExpression}"`;
+                addMessageToConversation(message, 'system');
             }
         } catch (parseError) {
             console.error('JSON解析失败:', parseError);
