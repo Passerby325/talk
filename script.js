@@ -41,7 +41,7 @@ async function initializeScenario() {
         document.getElementById('scenario').innerHTML = `
             <h3>Scene：${currentScenario}</h3>
             <p>Character：${currentCharacter}</p>
-            <p class="hint">点击"换个场景"按钮可以更换场景和对话对象</p>
+            <p class="hint">点击"换个场景"按钮可以更换场景和对话对象。而点击"自定义"按钮能自定义场景和对话对象。</p>
         `;
     } catch (error) {
         console.error('初始化场景失败:', error);
