@@ -14,9 +14,26 @@
     <div class="container">
         <div class="scenario-container">
             <div id="scenario" class="scenario"></div>
-            <button id="refreshButton" onclick="initializeScenario()" class="refresh-button">
-                换个场景
-            </button>
+            <div class="button-group">
+                <button id="refreshButton" onclick="initializeScenario()" class="refresh-button">
+                    换个场景
+                </button>
+                <button onclick="showCustomDialog()" class="custom-button">
+                    自定义
+                </button>
+            </div>
+        </div>
+        <!-- 添加自定义场景对话框 -->
+        <div id="customDialog" class="custom-dialog hidden">
+            <div class="dialog-content">
+                <h3>自定义场景</h3>
+                <textarea id="customScene" placeholder="描述场景...（用英语）" rows="3"></textarea>
+                <textarea id="customCharacter" placeholder="描述对话对象...（用英语）" rows="2"></textarea>
+                <div class="dialog-buttons">
+                    <button onclick="applyCustomScenario()">确定</button>
+                    <button onclick="hideCustomDialog()">取消</button>
+                </div>
+            </div>
         </div>
         <div id="conversation" class="conversation"></div>
         <div class="input-area">
