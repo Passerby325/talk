@@ -62,15 +62,15 @@ async function sendMessage() {
     
     // 检查用户表达
     const checkPrompt = `
-        分析以下英语表达是否正确，如果有语法错误或是更适合的讲法请指出。
-        同时，请理解说话者想表达的意思，用简单的中文概括。
-        如果有多个语法点或建议，请分点列出。
-        回复必须是格式正确的JSON字符串：{
+        Analyze this English expression. If there are any grammar errors or better ways to express it, point them out.
+        Also, provide a simple Chinese summary of what the speaker wants to say.
+        Response must be in this JSON format:
+        {
             "isCorrect": boolean,
             "intendedMeaning": "中文说明",
-            "correction": ["改进点1", "改进点2", "..."] // 数组格式，每个元素是一个独立的改进建议
+            "correction": ["改进点1", "改进点2", "..."]
         }
-        用户输入：${userInput}
+        User input: "${userInput}"
     `;
 
     try {
@@ -83,7 +83,6 @@ async function sendMessage() {
             document.getElementById('confirmation').classList.remove('hidden');
             
             if (!analysis.isCorrect && Array.isArray(analysis.correction)) {
-                // 分段显示每个语法提示
                 const corrections = analysis.correction
                     .map((item, index) => `${index + 1}. ${item}`)
                     .join('\n');
