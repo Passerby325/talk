@@ -21,25 +21,37 @@ async function initializeScenario() {
     try {
         document.getElementById('scenario').innerHTML = '<p>正在加载场景...</p>';
         
-        const prompt = `请生成一个随机的对话场景和角色。
-回复必须是以下格式的JSON：
+        const prompt = `生成一个英语口语练习的场景。
+要求：
+1. 场景要简短具体
+2. 角色要简单明确，只需一个角色
+请按以下格式返回JSON：
 {
-    "scene": "具体的场景描述文本",
-    "character": "具体的角色描述文本"
+    "scene": "场景描述（中文）",
+    "character": "角色描述（中文）"
 }
-注意：scene和character的值必须是字符串，不要嵌套对象。`;
+示例：
+{
+    "scene": "在咖啡店排队点餐",
+    "character": "一位友善的咖啡师，20多岁"
+}`;
 
         const rawResponse = await fetchGeminiResponse(prompt);
-        console.log('API原始响应:', rawResponse); // 调试输出
+        console.log('API原始响应:', rawResponse);
         const cleanedResponse = cleanResponseText(rawResponse);
-        console.log('清理后的响应:', cleanedResponse); // 调试输出
+        console.log('清理后的响应:', cleanedResponse);
         
         try {
             const scenario = JSON.parse(cleanedResponse);
             
-            // 验证返回的数据格式
-            if (typeof scenario.scene !== 'string' || typeof scenario.character !== 'string') {
-                throw new Error('场景或角色数据格式不正确');
+            // 验证和处理返回的数据
+            if (!scenario.scene || !scenario.character || 
+                typeof scenario.scene !== 'string' || 
+                typeof scenario.character !== 'string') {
+                // 如果格式不正确，尝试提取英文描述中的有效信息
+                currentScenario = "加载场景失败，请重试";
+                currentCharacter = "未知角色";
+                throw new Error('场景数据格式不正确');
             }
             
             currentScenario = scenario.scene;
@@ -52,7 +64,10 @@ async function initializeScenario() {
         } catch (parseError) {
             console.error('JSON解析失败:', parseError);
             console.log('清理后的响应:', cleanedResponse);
-            throw new Error('场景数据格式错误');
+            document.getElementById('scenario').innerHTML = `
+                <p style="color: red;">场景格式错误，请重试</p>
+                <button onclick="initializeScenario()">重新加载场景</button>
+            `;
         }
     } catch (error) {
         console.error('初始化场景失败:', error);
