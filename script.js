@@ -21,12 +21,27 @@ async function initializeScenario() {
     try {
         document.getElementById('scenario').innerHTML = '<p>正在加载场景...</p>';
         
-        const prompt = "生成一个随机的对话场景和角色，回复必须是格式正确的JSON字符串，包含scene（场景描述）和character（角色描述）属性";
+        const prompt = `请生成一个随机的对话场景和角色。
+回复必须是以下格式的JSON：
+{
+    "scene": "具体的场景描述文本",
+    "character": "具体的角色描述文本"
+}
+注意：scene和character的值必须是字符串，不要嵌套对象。`;
+
         const rawResponse = await fetchGeminiResponse(prompt);
+        console.log('API原始响应:', rawResponse); // 调试输出
         const cleanedResponse = cleanResponseText(rawResponse);
+        console.log('清理后的响应:', cleanedResponse); // 调试输出
         
         try {
             const scenario = JSON.parse(cleanedResponse);
+            
+            // 验证返回的数据格式
+            if (typeof scenario.scene !== 'string' || typeof scenario.character !== 'string') {
+                throw new Error('场景或角色数据格式不正确');
+            }
+            
             currentScenario = scenario.scene;
             currentCharacter = scenario.character;
             
