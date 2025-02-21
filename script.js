@@ -24,8 +24,17 @@ async function initializeScenario() {
         document.getElementById('conversation').innerHTML = '';
         document.getElementById('scenario').innerHTML = '<p>Loading...</p>';
         
+        // 检查函数是否可用
+        if (typeof getRandomScenario !== 'function') {
+            throw new Error('场景生成功能未准备好，请刷新页面');
+        }
+        
         // 使用预定义数据随机生成场景
         const scenario = getRandomScenario();
+        if (!scenario || !scenario.scene || !scenario.character) {
+            throw new Error('生成场景数据无效');
+        }
+        
         currentScenario = scenario.scene;
         currentCharacter = scenario.character;
         
@@ -38,7 +47,7 @@ async function initializeScenario() {
         console.error('初始化场景失败:', error);
         document.getElementById('scenario').innerHTML = `
             <p style="color: red;">加载场景失败: ${error.message}</p>
-            <button onclick="initializeScenario()">重试</button>
+            <button onclick="window.location.reload()">重新加载页面</button>
         `;
     }
 }
