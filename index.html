@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI对话练习</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" type="image/x-icon" href="data:image/x-icon;,">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 添加 defer 属性并确保正确的加载顺序 -->
+    <script src="data.js" defer></script>
+    <script src="script.js" defer></script>
 </head>
 <body>
     <div class="container">
@@ -26,7 +29,5 @@
             <button onclick="confirmMeaning(false)">不是</button>
         </div>
     </div>
-    <script src="data.js"></script>
-    <script src="script.js"></script>
 </body>
 </html>
