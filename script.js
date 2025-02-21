@@ -101,11 +101,9 @@ async function initializeScenario() {
         document.getElementById('scenario').innerHTML = `
             <h3>Scene：${currentScenario}</h3>
             <p>Character：${currentCharacter}</p>
-            <p class="hint">点击"换个场景"按钮可以更换场景和对话对象。而点击"自定义"按钮能自定义场景和对话对象。</p>
+            <p class="hint">点击"换个场景"按钮可以更换场景和对话对象。点击"对方主动"按钮让对方开始对话。</p>
         `;
-
-        // 角色主动发起对话
-        await characterInitiate();
+        // 移除了自动调用 characterInitiate()
     } catch (error) {
         console.error('初始化场景失败:', error);
         document.getElementById('scenario').innerHTML = `
@@ -153,14 +151,12 @@ async function applyCustomScenario() {
         document.getElementById('scenario').innerHTML = `
             <h3>Scene：${currentScenario}</h3>
             <p>Character：${currentCharacter}</p>
-            <p class="hint">点击"换个场景"按钮可以更换场景和对话对象</p>
+            <p class="hint">点击"换个场景"按钮可以更换场景和对话对象。点击"对方主动"按钮让对方开始对话。</p>
         `;
         
         // 隐藏对话框
         hideCustomDialog();
-
-        // 角色主动发起对话
-        await characterInitiate();
+        // 移除了自动调用 characterInitiate()
     } catch (error) {
         console.error('设置自定义场景失败:', error);
         alert('设置场景失败，请重试');
