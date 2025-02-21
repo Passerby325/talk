@@ -24,55 +24,16 @@ async function initializeScenario() {
         document.getElementById('conversation').innerHTML = '';
         document.getElementById('scenario').innerHTML = '<p>Loading...</p>';
         
-        const prompt = `Generate an English conversation scenario.
-Requirements:
-1. Scene description should be specific but not more than 3 sentences
-2. Only one character who ONLY speaks English
-Format:
-{
-"scene": "Scene description",
-"character": "Character description"
-}
-Example:
-{
-    "scene": "In the coffee shop, customers are lining up to order, and the air is filled with the aroma of coffee and gentle background music.",
-    "character": "A male barista in his twenties stands behind the counter, smiling as he serves every customer."
-}`;
-
-        const rawResponse = await fetchGeminiResponse(prompt);
-        console.log('API原始响应:', rawResponse);
-        const cleanedResponse = cleanResponseText(rawResponse);
-        console.log('清理后的响应:', cleanedResponse);
+        // 使用预定义数据随机生成场景
+        const scenario = getRandomScenario();
+        currentScenario = scenario.scene;
+        currentCharacter = scenario.character;
         
-        try {
-            const scenario = JSON.parse(cleanedResponse);
-            
-            // 验证和处理返回的数据
-            if (!scenario.scene || !scenario.character || 
-                typeof scenario.scene !== 'string' || 
-                typeof scenario.character !== 'string') {
-                // 如果格式不正确，尝试提取英文描述中的有效信息
-                currentScenario = "加载场景失败，请重试";
-                currentCharacter = "未知角色";
-                throw new Error('场景数据格式不正确');
-            }
-            
-            currentScenario = scenario.scene;
-            currentCharacter = scenario.character;
-            
-            document.getElementById('scenario').innerHTML = `
-                <h3>Scene：${currentScenario}</h3>
-                <p>Characyer：${currentCharacter}</p>
-                <p class="hint">点击"换个场景"按钮可以更换场景和对话对象</p>
-            `;
-        } catch (parseError) {
-            console.error('JSON解析失败:', parseError);
-            console.log('清理后的响应:', cleanedResponse);
-            document.getElementById('scenario').innerHTML = `
-                <p style="color: red;">场景格式错误，请重试</p>
-                <button onclick="initializeScenario()">重新加载场景</button>
-            `;
-        }
+        document.getElementById('scenario').innerHTML = `
+            <h3>Scene：${currentScenario}</h3>
+            <p>Character：${currentCharacter}</p>
+            <p class="hint">点击"换个场景"按钮可以更换场景和对话对象</p>
+        `;
     } catch (error) {
         console.error('初始化场景失败:', error);
         document.getElementById('scenario').innerHTML = `
