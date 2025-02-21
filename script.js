@@ -78,6 +78,9 @@ async function initializeScenario() {
             <p>Character：${currentCharacter}</p>
             <p class="hint">点击"换个场景"按钮可以更换场景和对话对象。而点击"自定义"按钮能自定义场景和对话对象。</p>
         `;
+
+        // 角色主动发起对话
+        await characterInitiate();
     } catch (error) {
         console.error('初始化场景失败:', error);
         document.getElementById('scenario').innerHTML = `
@@ -130,6 +133,9 @@ async function applyCustomScenario() {
         
         // 隐藏对话框
         hideCustomDialog();
+
+        // 角色主动发起对话
+        await characterInitiate();
     } catch (error) {
         console.error('设置自定义场景失败:', error);
         alert('设置场景失败，请重试');
@@ -307,6 +313,31 @@ async function fetchGeminiResponse(prompt) {
     } catch (error) {
         console.error('API调用失败:', error);
         throw new Error(`API请求失败: ${error.message}`);
+    }
+}
+
+// 添加对方主动说话功能
+async function characterInitiate() {
+    const initiatePrompt = `
+        As the character described below, initiate a conversation naturally.
+        The character should start the conversation in a way that:
+        1. Fits their role and the current scene
+        2. Feels natural and appropriate
+        3. Invites a response from the user
+        4. Uses common English expressions
+        
+        Scene: ${currentScenario}
+        Character: ${currentCharacter}
+        
+        Generate a natural conversation starter in plain text.
+    `;
+    
+    try {
+        const aiInitiation = await fetchGeminiResponse(initiatePrompt);
+        addMessageToConversation(aiInitiation, 'ai');
+    } catch (error) {
+        console.error('生成对话失败:', error);
+        addMessageToConversation('抱歉，生成对话失败，请重试', 'system');
     }
 }
 
