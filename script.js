@@ -1,6 +1,6 @@
 // Gemini API配置
-const API_KEY = 'AIzaSyBow4KtOLkmFYThs0YkwTCb7eOZvfZ6Lk8';
-const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+const API_KEY = 'YOUAIzaSyBow4KtOLkmFYThs0YkwTCb7eOZvfZ6Lk8'; // 替换为你的API密钥
+const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=GEMINI_API_KEY';
 
 let currentScenario = '';
 let currentCharacter = '';
@@ -8,11 +8,13 @@ let conversationHistory = [];
 
 // 初始化场景
 async function initializeScenario() {
-    const prompt = "生成一个随机的对话场景和角色，格式为JSON，包含scene（场景描述）和character（角色描述）";
-    
     try {
+        document.getElementById('scenario').innerHTML = '<p>正在加载场景...</p>';
+        
+        const prompt = "生成一个随机的对话场景和角色，格式为JSON，包含scene（场景描述）和character（角色描述）";
         const response = await fetchGeminiResponse(prompt);
         const scenario = JSON.parse(response);
+        
         currentScenario = scenario.scene;
         currentCharacter = scenario.character;
         
@@ -22,6 +24,10 @@ async function initializeScenario() {
         `;
     } catch (error) {
         console.error('初始化场景失败:', error);
+        document.getElementById('scenario').innerHTML = `
+            <p style="color: red;">加载场景失败: ${error.message}</p>
+            <button onclick="initializeScenario()">重试</button>
+        `;
     }
 }
 
@@ -117,27 +123,35 @@ function addMessageToConversation(message, type) {
 
 // 调用Gemini API
 async function fetchGeminiResponse(prompt) {
-    const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${API_KEY}`
-        },
-        body: JSON.stringify({
-            contents: [{
-                parts: [{
-                    text: prompt
+    try {
+        const response = await fetch(`${API_URL}?key=${API_KEY}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                contents: [{
+                    parts: [{
+                        text: prompt
+                    }]
                 }]
-            }]
-        })
-    });
+            })
+        });
 
-    if (!response.ok) {
-        throw new Error('API请求失败');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        if (!data.candidates || !data.candidates[0]?.content?.parts?.[0]?.text) {
+            throw new Error('Invalid API response format');
+        }
+
+        return data.candidates[0].content.parts[0].text;
+    } catch (error) {
+        console.error('API调用失败:', error);
+        throw new Error(`API请求失败: ${error.message}`);
     }
-
-    const data = await response.json();
-    return data.candidates[0].content.parts[0].text;
 }
 
 // 页面加载时初始化场景
