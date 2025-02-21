@@ -2,10 +2,45 @@
 const API_KEY = 'AIzaSyA7JRZ1wssbb07dgTAJ2Ut1t-r0t4bKR4M'; // 替换为你的API密钥
 const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
 
-
 let currentScenario = '';
 let currentCharacter = '';
 let conversationHistory = [];
+
+// 添加主题切换功能
+let currentTheme = 'normal';
+const themes = ['normal', 'dark', 'eye-care'];
+const themeNames = {
+    'normal': '正常模式',
+    'dark': '黑夜模式',
+    'eye-care': '养眼模式'
+};
+
+function switchTheme() {
+    // 获取当前主题的索引
+    const currentIndex = themes.indexOf(currentTheme);
+    // 切换到下一个主题
+    const nextIndex = (currentIndex + 1) % themes.length;
+    currentTheme = themes[nextIndex];
+    
+    // 更新文档主题
+    document.documentElement.setAttribute('data-theme', currentTheme === 'normal' ? '' : currentTheme);
+    
+    // 更新按钮文字
+    document.getElementById('themeSwitcher').textContent = themeNames[currentTheme];
+    
+    // 保存主题选择到本地存储
+    localStorage.setItem('preferred-theme', currentTheme);
+}
+
+// 页面加载时恢复保存的主题
+window.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('preferred-theme');
+    if (savedTheme) {
+        currentTheme = savedTheme;
+        document.documentElement.setAttribute('data-theme', currentTheme === 'normal' ? '' : currentTheme);
+        document.getElementById('themeSwitcher').textContent = themeNames[currentTheme];
+    }
+});
 
 // 清理API响应文本
 function cleanResponseText(text) {
