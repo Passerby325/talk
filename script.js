@@ -52,13 +52,20 @@ async function initializeScenario() {
     }
 }
 
-// 添加自定义场景相关函数
+// 修改对话框显示/隐藏函数
 function showCustomDialog() {
-    document.getElementById('customDialog').classList.remove('hidden');
+    const dialog = document.getElementById('customDialog');
+    dialog.classList.remove('hidden');
+    dialog.classList.add('show');
+    // 清空之前的输入
+    document.getElementById('customScene').value = '';
+    document.getElementById('customCharacter').value = '';
 }
 
 function hideCustomDialog() {
-    document.getElementById('customDialog').classList.add('hidden');
+    const dialog = document.getElementById('customDialog');
+    dialog.classList.add('hidden');
+    dialog.classList.remove('show');
 }
 
 async function applyCustomScenario() {
@@ -70,23 +77,28 @@ async function applyCustomScenario() {
         return;
     }
     
-    // 清除对话历史
-    conversationHistory = [];
-    document.getElementById('conversation').innerHTML = '';
-    
-    // 设置新场景
-    currentScenario = customScene;
-    currentCharacter = customCharacter;
-    
-    // 更新显示
-    document.getElementById('scenario').innerHTML = `
-        <h3>Scene：${currentScenario}</h3>
-        <p>Character：${currentCharacter}</p>
-        <p class="hint">点击"换个场景"按钮可以更换场景和对话对象</p>
-    `;
-    
-    // 隐藏对话框
-    hideCustomDialog();
+    try {
+        // 清除对话历史
+        conversationHistory = [];
+        document.getElementById('conversation').innerHTML = '';
+        
+        // 设置新场景
+        currentScenario = customScene;
+        currentCharacter = customCharacter;
+        
+        // 更新显示
+        document.getElementById('scenario').innerHTML = `
+            <h3>Scene：${currentScenario}</h3>
+            <p>Character：${currentCharacter}</p>
+            <p class="hint">点击"换个场景"按钮可以更换场景和对话对象</p>
+        `;
+        
+        // 隐藏对话框
+        hideCustomDialog();
+    } catch (error) {
+        console.error('设置自定义场景失败:', error);
+        alert('设置场景失败，请重试');
+    }
 }
 
 // 发送消息
