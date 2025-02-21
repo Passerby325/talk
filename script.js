@@ -148,6 +148,10 @@ async function fetchGeminiResponse(prompt) {
             throw new Error('Invalid API response format');
         }
 
+        let candidateText = data.candidates[0].content.parts[0].text;
+candidateText = candidateText.replace(/```json/g, '').replace(/```/g, '').trim();
+
+
         return data.candidates[0].content.parts[0].text;
     } catch (error) {
         console.error('API调用失败:', error);
