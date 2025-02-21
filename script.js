@@ -60,26 +60,34 @@ async function sendMessage() {
     const checkPrompt = `
         分析以下英语表达是否正确，如果有语法错误请指出。
         同时，请理解说话者想表达的意思，用简单的中文概括。
-        回复格式为JSON：{
+        回复必须是格式正确的JSON字符串：{
             "isCorrect": boolean,
-            "intendedMeaning": "英文说明",
+            "intendedMeaning": "中文说明",
             "correction": "如果有错误，给出修正建议，如果正确则为空"
         }
         用户输入：${userInput}
     `;
 
     try {
-        const response = await fetchGeminiResponse(checkPrompt);
-        const analysis = JSON.parse(response);
+        const rawResponse = await fetchGeminiResponse(checkPrompt);
+        const cleanedResponse = cleanResponseText(rawResponse);
         
-        document.getElementById('meaningCheck').textContent = analysis.intendedMeaning;
-        document.getElementById('confirmation').classList.remove('hidden');
-        
-        if (!analysis.isCorrect) {
-            addMessageToConversation(`语法提示：${analysis.correction}`, 'system');
+        try {
+            const analysis = JSON.parse(cleanedResponse);
+            document.getElementById('meaningCheck').textContent = analysis.intendedMeaning;
+            document.getElementById('confirmation').classList.remove('hidden');
+            
+            if (!analysis.isCorrect) {
+                addMessageToConversation(`语法提示：${analysis.correction}`, 'system');
+            }
+        } catch (parseError) {
+            console.error('JSON解析失败:', parseError);
+            console.log('清理后的响应:', cleanedResponse);
+            addMessageToConversation('抱歉，分析结果格式错误', 'system');
         }
     } catch (error) {
         console.error('分析失败:', error);
+        addMessageToConversation('分析失败，请重试', 'system');
     }
 }
 
