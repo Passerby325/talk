@@ -7,22 +7,38 @@ let currentScenario = '';
 let currentCharacter = '';
 let conversationHistory = [];
 
-// 初始化场景
+// 清理API响应文本
+function cleanResponseText(text) {
+    // 移除Markdown代码块标记和多余的空白
+    return text
+        .replace(/```json\n?/g, '')
+        .replace(/```\n?/g, '')
+        .trim();
+}
+
+// 修改初始化场景函数
 async function initializeScenario() {
     try {
         document.getElementById('scenario').innerHTML = '<p>正在加载场景...</p>';
         
-        const prompt = "生成一个随机的对话场景和角色，格式为JSON，包含scene（场景描述）和character（角色描述）";
-        const response = await fetchGeminiResponse(prompt);
-        const scenario = JSON.parse(response);
+        const prompt = "生成一个随机的对话场景和角色，回复必须是格式正确的JSON字符串，包含scene（场景描述）和character（角色描述）属性";
+        const rawResponse = await fetchGeminiResponse(prompt);
+        const cleanedResponse = cleanResponseText(rawResponse);
         
-        currentScenario = scenario.scene;
-        currentCharacter = scenario.character;
-        
-        document.getElementById('scenario').innerHTML = `
-            <h3>场景：${currentScenario}</h3>
-            <p>对话对象：${currentCharacter}</p>
-        `;
+        try {
+            const scenario = JSON.parse(cleanedResponse);
+            currentScenario = scenario.scene;
+            currentCharacter = scenario.character;
+            
+            document.getElementById('scenario').innerHTML = `
+                <h3>场景：${currentScenario}</h3>
+                <p>对话对象：${currentCharacter}</p>
+            `;
+        } catch (parseError) {
+            console.error('JSON解析失败:', parseError);
+            console.log('清理后的响应:', cleanedResponse);
+            throw new Error('场景数据格式错误');
+        }
     } catch (error) {
         console.error('初始化场景失败:', error);
         document.getElementById('scenario').innerHTML = `
@@ -122,7 +138,7 @@ function addMessageToConversation(message, type) {
     });
 }
 
-// 调用Gemini API
+// 修改API调用函数
 async function fetchGeminiResponse(prompt) {
     try {
         const response = await fetch(`${API_URL}?key=${API_KEY}`, {
@@ -135,7 +151,13 @@ async function fetchGeminiResponse(prompt) {
                     parts: [{
                         text: prompt
                     }]
-                }]
+                }],
+                generationConfig: {
+                    temperature: 0.7,
+                    topK: 40,
+                    topP: 0.95,
+                    maxOutputTokens: 1024,
+                }
             })
         });
 
@@ -147,10 +169,6 @@ async function fetchGeminiResponse(prompt) {
         if (!data.candidates || !data.candidates[0]?.content?.parts?.[0]?.text) {
             throw new Error('Invalid API response format');
         }
-
-        let candidateText = data.candidates[0].content.parts[0].text;
-candidateText = candidateText.replace(/```json/g, '').replace(/```/g, '').trim();
-
 
         return data.candidates[0].content.parts[0].text;
     } catch (error) {
