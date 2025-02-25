@@ -215,21 +215,28 @@ async function sendMessage() {
     
     const checkPrompt = `
         Analyze this English expression and provide feedback in JSON format.
+        All explanations must be in English.
         For better expressions, provide exactly one formal and one casual alternative.
         
         Response format:
         {
             "isCorrect": boolean,
-            "intendedMeaning": "用中文说明用户想表达的意思",
-            "grammarErrors": ["错误1", "错误2"],
+            "intendedMeaning": "Chinese explanation of user's intent",
+            "grammarErrors": [
+                {
+                    "error": "The actual error, e.g., 'hwllo'",
+                    "correction": "The correction, e.g., 'hello'",
+                    "explanation": "Brief explanation in English"
+                }
+            ],
             "betterExpressions": {
                 "formal": {
-                    "expression": "一个更正式的表达",
-                    "explanation": "用中文说明用法"
+                    "expression": "A more formal expression",
+                    "explanation": "Usage explanation in English"
                 },
                 "casual": {
-                    "expression": "一个地道的口语表达",
-                    "explanation": "用中文说明用法"
+                    "expression": "A more casual/natural expression",
+                    "explanation": "Usage explanation in English"
                 }
             }
         }
@@ -246,28 +253,28 @@ async function sendMessage() {
             document.getElementById('meaningCheck').textContent = analysis.intendedMeaning;
             document.getElementById('confirmation').classList.remove('hidden');
             
-            // 只有在有错误或需要改进时才显示系统消息
             if (!analysis.isCorrect) {
                 let message = '';
                 
-                // 显示语法错误（如果有）
+                // 显示语法错误
                 if (analysis.grammarErrors && analysis.grammarErrors.length > 0) {
-                    message += `语法错误：\n${analysis.grammarErrors.map((err, i) => `${i + 1}. ${err}`).join('\n')}\n\n`;
+                    message += `Grammar Errors:\n${analysis.grammarErrors.map((err, i) => 
+                        `${i + 1}. Found "${err.error}" - Should be "${err.correction}"\n   ${err.explanation}`
+                    ).join('\n\n')}\n\n`;
                 }
                 
-                // 如果有更好的表达方式，显示建议
+                // 显示更好的表达方式
                 const { formal, casual } = analysis.betterExpressions;
                 if (formal || casual) {
                     if (formal) {
-                        message += `正式场合：\n${formal.expression}\n说明：${formal.explanation}\n\n`;
+                        message += `Formal Expression:\n${formal.expression}\nExplanation: ${formal.explanation}\n\n`;
                     }
                     
                     if (casual) {
-                        message += `日常口语：\n${casual.expression}\n说明：${casual.explanation}`;
+                        message += `Casual Expression:\n${casual.expression}\nExplanation: ${casual.explanation}`;
                     }
                 }
                 
-                // 只有在有内容时才添加系统消息
                 if (message.trim()) {
                     addMessageToConversation(message, 'system');
                 }
@@ -276,11 +283,11 @@ async function sendMessage() {
         } catch (parseError) {
             console.error('JSON解析失败:', parseError);
             console.log('清理后的响应:', cleanedResponse);
-            addMessageToConversation('抱歉，分析结果格式错误', 'system');
+            addMessageToConversation('Sorry, failed to parse the analysis result', 'system');
         }
     } catch (error) {
         console.error('分析失败:', error);
-        addMessageToConversation('分析失败，请重试', 'system');
+        addMessageToConversation('Analysis failed, please try again', 'system');
     }
 }
 
