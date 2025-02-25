@@ -174,12 +174,12 @@ async function sendMessage() {
     // 修改检查提示，分开分析语法错误和表达建议
     const checkPrompt = `
         Analyze this English expression and provide feedback in JSON format.
-        Analyze for both grammar and expression style, providing formal and casual alternatives.
+        Analyze for both grammar and expression style, providing one formal and one casual alternatives.
         
         Response format:
         {
             "isCorrect": boolean,
-            "intendedMeaning": "中文说明",
+            "intendedMeaning": "英文说明",
             "grammarErrors": ["错误1", "错误2"],
             "betterExpressions": {
                 "formal": [
@@ -221,13 +221,13 @@ async function sendMessage() {
                 // 显示更好的表达方式
                 if (analysis.betterExpressions) {
                     if (analysis.betterExpressions.formal && analysis.betterExpressions.formal.length > 0) {
-                        message += `正式场合表达：\n${analysis.betterExpressions.formal
+                        message += `Formally：\n${analysis.betterExpressions.formal
                             .map((item, i) => `${i + 1}. ${item.expression}\n   说明：${item.explanation}`)
                             .join('\n')}\n\n`;
                     }
                     
                     if (analysis.betterExpressions.casual && analysis.betterExpressions.casual.length > 0) {
-                        message += `日常口语表达：\n${analysis.betterExpressions.casual
+                        message += `Causally：\n${analysis.betterExpressions.casual
                             .map((item, i) => `${i + 1}. ${item.expression}\n   说明：${item.explanation}`)
                             .join('\n')}`;
                     }

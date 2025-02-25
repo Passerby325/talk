@@ -311,6 +311,37 @@ button {
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
+/* 场景信息翻译按钮样式 */
+.scene-info h3, .scene-info p {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.scene-info .translate-btn {
+    padding: 3px 8px;
+    font-size: 12px;
+    background: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    opacity: 0.7;
+    cursor: pointer;
+    min-height: unset;
+    margin-left: 10px;
+}
+
+.scene-info .translate-btn:hover {
+    opacity: 1;
+}
+
+.translation-text {
+    color: #666;
+    font-size: 0.9em;
+    margin-left: 5px;
+}
+
 /* 媒体查询 - 移动设备 */
 @media screen and (max-width: 600px) {
     body {
