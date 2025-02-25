@@ -215,6 +215,7 @@ async function sendMessage() {
     
     const checkPrompt = `
         Analyze this English expression and provide feedback in JSON format.
+        Check for grammar, expression style, and politeness level.
         All explanations must be in English.
         For better expressions, provide exactly one formal and one casual alternative.
         
@@ -224,11 +225,16 @@ async function sendMessage() {
             "intendedMeaning": "用中文解释用户的意图",
             "grammarErrors": [
                 {
-                    "error": "The actual error, e.g., 'hwllo'",
-                    "correction": "The correction, e.g., 'hello'",
+                    "error": "The actual error",
+                    "correction": "The correction",
                     "explanation": "Brief explanation in English"
                 }
             ],
+            "politenessCheck": {
+                "isPolite": boolean,
+                "issues": ["Description of politeness issues if any"],
+                "politeAlternative": "More polite way to express the same thing"
+            },
             "betterExpressions": {
                 "formal": {
                     "expression": "A more formal expression",
@@ -253,7 +259,7 @@ async function sendMessage() {
             document.getElementById('meaningCheck').textContent = analysis.intendedMeaning;
             document.getElementById('confirmation').classList.remove('hidden');
             
-            if (!analysis.isCorrect) {
+            if (!analysis.isCorrect || !analysis.politenessCheck.isPolite) {
                 let message = '';
                 
                 // 显示语法错误
@@ -263,7 +269,13 @@ async function sendMessage() {
                     ).join('\n\n')}\n\n`;
                 }
                 
-                // 显示更好的表达方式，添加引号
+                // 显示礼貌程度问题
+                if (!analysis.politenessCheck.isPolite) {
+                    message += `Politeness Issues:\n${analysis.politenessCheck.issues.join('\n')}\n`;
+                    message += `Polite Alternative:\n"${analysis.politenessCheck.politeAlternative}"\n\n`;
+                }
+                
+                // 显示更好的表达方式
                 const { formal, casual } = analysis.betterExpressions;
                 if (formal || casual) {
                     if (formal) {
