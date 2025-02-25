@@ -171,17 +171,32 @@ async function sendMessage() {
     // 添加用户消息到对话界面
     addMessageToConversation(userInput, 'user');
     
-    // 检查用户表达
+    // 修改检查提示，分开分析语法错误和表达建议
     const checkPrompt = `
-        Analyze this English expression. If there are any grammar errors or better ways to express it, point them out.
-        Also, provide a simple Chinese summary and the correct/recommended expression.
-        Response must be in this JSON format:
+        Analyze this English expression and provide feedback in JSON format.
+        Analyze for both grammar and expression style, providing formal and casual alternatives.
+        
+        Response format:
         {
             "isCorrect": boolean,
             "intendedMeaning": "中文说明",
-            "correction": ["改进点1", "改进点2", "..."],
-            "recommendedExpression": "The correct/better way to express this"
+            "grammarErrors": ["错误1", "错误2"],
+            "betterExpressions": {
+                "formal": [
+                    {
+                        "expression": "更正式的表达",
+                        "explanation": "用法说明"
+                    }
+                ],
+                "casual": [
+                    {
+                        "expression": "地道口语表达",
+                        "explanation": "用法说明"
+                    }
+                ]
+            }
         }
+        
         User input: "${userInput}"
     `;
 
@@ -194,11 +209,30 @@ async function sendMessage() {
             document.getElementById('meaningCheck').textContent = analysis.intendedMeaning;
             document.getElementById('confirmation').classList.remove('hidden');
             
-            if (!analysis.isCorrect && Array.isArray(analysis.correction)) {
-                const corrections = analysis.correction
-                    .map((item, index) => `${index + 1}. ${item}`)
-                    .join('\n');
-                const message = `语法提示：\n${corrections}\n\n推荐表达：\n"${analysis.recommendedExpression}"`;
+            // 分别显示语法错误和表达建议
+            if (!analysis.isCorrect) {
+                let message = '';
+                
+                // 显示语法错误
+                if (analysis.grammarErrors && analysis.grammarErrors.length > 0) {
+                    message += `语法错误：\n${analysis.grammarErrors.map((err, i) => `${i + 1}. ${err}`).join('\n')}\n\n`;
+                }
+                
+                // 显示更好的表达方式
+                if (analysis.betterExpressions) {
+                    if (analysis.betterExpressions.formal && analysis.betterExpressions.formal.length > 0) {
+                        message += `正式场合表达：\n${analysis.betterExpressions.formal
+                            .map((item, i) => `${i + 1}. ${item.expression}\n   说明：${item.explanation}`)
+                            .join('\n')}\n\n`;
+                    }
+                    
+                    if (analysis.betterExpressions.casual && analysis.betterExpressions.casual.length > 0) {
+                        message += `日常口语表达：\n${analysis.betterExpressions.casual
+                            .map((item, i) => `${i + 1}. ${item.expression}\n   说明：${item.explanation}`)
+                            .join('\n')}`;
+                    }
+                }
+                
                 addMessageToConversation(message, 'system');
             }
         } catch (parseError) {
