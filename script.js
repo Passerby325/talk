@@ -211,10 +211,8 @@ async function sendMessage() {
     const userInput = document.getElementById('userInput').value;
     if (!userInput.trim()) return;
 
-    // 添加用户消息到对话界面
     addMessageToConversation(userInput, 'user');
     
-    // 修改检查提示，分开分析语法错误和表达建议
     const checkPrompt = `
         Analyze this English expression and provide feedback in JSON format.
         For better expressions, provide exactly one formal and one casual alternative.
@@ -227,11 +225,11 @@ async function sendMessage() {
             "betterExpressions": {
                 "formal": {
                     "expression": "一个更正式的表达",
-                    "explanation": "用法说明"
+                    "explanation": "用中文说明用法"
                 },
                 "casual": {
                     "expression": "一个地道的口语表达",
-                    "explanation": "用法说明"
+                    "explanation": "用中文说明用法"
                 }
             }
         }
@@ -248,30 +246,33 @@ async function sendMessage() {
             document.getElementById('meaningCheck').textContent = analysis.intendedMeaning;
             document.getElementById('confirmation').classList.remove('hidden');
             
-            // 分别显示语法错误和表达建议
+            // 只有在有错误或需要改进时才显示系统消息
             if (!analysis.isCorrect) {
                 let message = '';
                 
-                // 显示语法错误
+                // 显示语法错误（如果有）
                 if (analysis.grammarErrors && analysis.grammarErrors.length > 0) {
                     message += `语法错误：\n${analysis.grammarErrors.map((err, i) => `${i + 1}. ${err}`).join('\n')}\n\n`;
                 }
                 
-                // 显示更好的表达方式
-                if (analysis.betterExpressions) {
-                    const { formal, casual } = analysis.betterExpressions;
-                    
+                // 如果有更好的表达方式，显示建议
+                const { formal, casual } = analysis.betterExpressions;
+                if (formal || casual) {
                     if (formal) {
-                        message += `正式表达：\n${formal.expression}\n说明：${formal.explanation}\n\n`;
+                        message += `正式场合：\n${formal.expression}\n说明：${formal.explanation}\n\n`;
                     }
                     
                     if (casual) {
-                        message += `口语表达：\n${casual.expression}\n说明：${casual.explanation}`;
+                        message += `日常口语：\n${casual.expression}\n说明：${casual.explanation}`;
                     }
                 }
                 
-                addMessageToConversation(message, 'system');
+                // 只有在有内容时才添加系统消息
+                if (message.trim()) {
+                    addMessageToConversation(message, 'system');
+                }
             }
+            
         } catch (parseError) {
             console.error('JSON解析失败:', parseError);
             console.log('清理后的响应:', cleanedResponse);
