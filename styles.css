@@ -8,6 +8,7 @@
     --ai-msg-bg: #f5f5f5;
     --system-msg-bg: #fff3cd;
     --system-msg-border: #ffc107;
+    --confirmation-bg:#fff3e0;
 }
 
 /* 黑夜模式 */
@@ -20,18 +21,20 @@
     --ai-msg-bg: #2d2d2d;
     --system-msg-bg: #353535;
     --system-msg-border: #505050;
+    --confirmation-bg:#712f6f;
 }
 
 /* 养眼模式 */
 [data-theme="eye-care"] {
-    --bg-color: #F5FFFA;
-    --container-bg: #ffffff;
-    --text-color: #333333;
-    --scenario-bg: #E0FFF5;
-    --user-msg-bg: #E0FFF5;
-    --ai-msg-bg: #ffffff;
-    --system-msg-bg: #F0FFF8;
-    --system-msg-border: #98FFD8;
+    --bg-color: #F5FFFA;            /* 淡薄荷奶油色，作为整体背景 */
+    --container-bg: #FFFFFF;         /* 纯净白色，保证内容清晰 */
+    --text-color: #333333;           /* 深灰色文字，阅读舒适 */
+    --scenario-bg: #F1F8E9;          /* 淡绿色背景，营造温馨氛围 */
+    --user-msg-bg: #F1F8E9;          /* 与场景背景一致，保持风格统一 */
+    --ai-msg-bg: #E3F2FD;            /* 淡蓝色背景，区分不同角色信息 */
+    --system-msg-bg: #FFFDE7;        /* 极淡黄色背景，突出系统提示但不刺眼 */
+    --system-msg-border: #C5E1A5;    /* 柔和的绿色边框，为系统提示添加细节 */
+    --confirmation-bg: #FFF9C4;      /* 柔淡的黄色，用于确认提示 */
 }
 
 body {
@@ -203,7 +206,7 @@ button {
 .confirmation {
     margin-top: 20px;
     padding: 15px;
-    background: #b74db3;
+    background-color: var(--confirmation-bg);
     border-radius: 5px;
 }
 
