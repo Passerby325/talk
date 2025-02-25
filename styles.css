@@ -27,16 +27,17 @@
 
 /* 养眼模式 */
 [data-theme="eye-care"] {
-    --bg-color: #F5FFFA;            /* 淡薄荷奶油色，作为整体背景 */
+    --bg-color: #FFF9E3;            /* 淡黄色背景，营造温暖氛围 */
     --container-bg: #FFFFFF;         /* 纯净白色，保证内容清晰 */
-    --text-color: #333333;           /* 深灰色文字，阅读舒适 */
-    --scenario-bg: #F1F8E9;          /* 淡绿色背景，营造温馨氛围 */
-    --user-msg-bg: #F1F8E9;          /* 与场景背景一致，保持风格统一 */
+    --text-color: #333333;           /* 深灰色文字，确保阅读舒适 */
+    --scenario-bg: #FFF2D1;          /* 淡桃色背景，为场景增添柔和感 */
+    --user-msg-bg: #FFF2D1;          /* 用户消息背景同场景背景，保持风格统一 */
     --ai-msg-bg: #E3F2FD;            /* 淡蓝色背景，区分不同角色信息 */
-    --system-msg-bg: #FFFDE7;        /* 极淡黄色背景，突出系统提示但不刺眼 */
-    --system-msg-border: #C5E1A5;    /* 柔和的绿色边框，为系统提示添加细节 */
-    --confirmation-bg: #FFF9C4;      /* 柔淡的黄色，用于确认提示 */
+    --system-msg-bg: #FFF8E1;        /* 极淡奶油色背景，突出系统提示但不过于刺眼 */
+    --system-msg-border: #FFECB3;    /* 柔和的琥珀色边框，为系统提示添加细节 */
+    --confirmation-bg: #FFF9C4;      /* 柔淡的柠檬黄，用于确认提示 */
 }
+
 
 body {
     font-family: Arial, sans-serif;
