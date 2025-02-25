@@ -1,13 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI对话练习</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" type="image/x-icon" href="data:image/x-icon;,">
+    <!-- 添加 defer 属性并确保正确的加载顺序 -->
+    <script src="data.js" defer></script>
+    <script src="script.js" defer></script>
 </head>
 <body>
+    <div class="theme-switcher">
+        <button id="themeSwitcher" onclick="switchTheme()">切换主题</button>
+    </div>
     <div class="container">
-        <div id="scenario" class="scenario"></div>
+        <div class="scenario-container">
+            <div id="scenario" class="scenario"></div>
+            <div class="button-group">
+                <button id="refreshButton" class="refresh-button" onclick="initializeScenario()">换个场景</button>
+                <button class="custom-button" onclick="showCustomDialog()">自定义</button>
+                <button class="proactive-button" onclick="characterInitiate()">对方主动</button>
+            </div>
+        </div>
+        <!-- 添加自定义场景对话框 -->
+        <div id="customDialog" class="custom-dialog hidden">
+            <div class="dialog-content">
+                <h3>自定义场景</h3>
+                <textarea id="customScene" placeholder="描述场景...（用英语）" rows="3"></textarea>
+                <textarea id="customCharacter" placeholder="描述对话对象...（用英语）" rows="2"></textarea>
+                <div class="dialog-buttons">
+                    <button onclick="applyCustomScenario()" class="confirm-button">确定</button>
+                    <button onclick="hideCustomDialog()" class="cancel-button">取消</button>
+                </div>
+            </div>
+        </div>
         <div id="conversation" class="conversation"></div>
         <div class="input-area">
             <input type="text" id="userInput" placeholder="输入你想说的话...">
@@ -19,6 +46,5 @@
             <button onclick="confirmMeaning(false)">不是</button>
         </div>
     </div>
-    <script src="script.js"></script>
 </body>
 </html>
