@@ -151,6 +151,13 @@ body {
     flex: 1;
     padding: 10px;
     min-width: 200px;
+    resize: none;
+    overflow-y: auto;
+    min-height: 44px;
+    max-height: 100px;
+    line-height: 1.5;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
 button {

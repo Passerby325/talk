@@ -337,5 +337,14 @@ async function fetchGeminiResponse(prompt) {
     }
 }
 
-// 页面加载时初始化场景
-window.onload = initializeScenario;
+// 在 window.onload 中添加事件监听
+window.onload = function() {
+    initializeScenario();
+    
+    // 添加输入框自动调整高度
+    const userInput = document.getElementById('userInput');
+    userInput.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight) + 'px';
+    });
+};
