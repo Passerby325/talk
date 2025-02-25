@@ -263,15 +263,15 @@ async function sendMessage() {
                     ).join('\n\n')}\n\n`;
                 }
                 
-                // 显示更好的表达方式
+                // 显示更好的表达方式，添加引号
                 const { formal, casual } = analysis.betterExpressions;
                 if (formal || casual) {
                     if (formal) {
-                        message += `Formal Expression:\n${formal.expression}\nExplanation: ${formal.explanation}\n\n`;
+                        message += `Formal Expression:\n"${formal.expression}"\nExplanation: ${formal.explanation}\n\n`;
                     }
                     
                     if (casual) {
-                        message += `Casual Expression:\n${casual.expression}\nExplanation: ${casual.explanation}`;
+                        message += `Casual Expression:\n"${casual.expression}"\nExplanation: ${casual.explanation}`;
                     }
                 }
                 
@@ -428,6 +428,9 @@ async function translateMessage(messageElement, container) {
 
 // 修改API调用函数
 async function fetchGeminiResponse(prompt) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30秒超时
+
     try {
         const response = await fetch(`${API_URL}?key=${API_KEY}`, {
             method: 'POST',
@@ -446,20 +449,31 @@ async function fetchGeminiResponse(prompt) {
                     topP: 0.95,
                     maxOutputTokens: 1024,
                 }
-            })
+            }),
+            signal: controller.signal
         });
+
+        clearTimeout(timeoutId);
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const data = await response.json();
+        
+        // 等待一小段时间以确保消息通道保持打开
+        await new Promise(resolve => setTimeout(resolve, 100));
+
         if (!data.candidates || !data.candidates[0]?.content?.parts?.[0]?.text) {
             throw new Error('Invalid API response format');
         }
 
         return data.candidates[0].content.parts[0].text;
     } catch (error) {
+        clearTimeout(timeoutId);
+        if (error.name === 'AbortError') {
+            throw new Error('Request timed out');
+        }
         console.error('API调用失败:', error);
         throw new Error(`API请求失败: ${error.message}`);
     }
