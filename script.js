@@ -76,6 +76,35 @@ function cleanResponseText(text) {
         .trim();
 }
 
+// 添加场景信息翻译函数
+async function translateScenarioInfo(element, type) {
+    const originalText = element.textContent.replace(/^(Scene：|Character：)/, '').trim();
+    const existingTranslation = element.querySelector('.translation-text');
+    
+    if (existingTranslation) {
+        existingTranslation.remove();
+        return;
+    }
+    
+    try {
+        const translationPrompt = `
+            Translate the following English text to Chinese. 
+            Only provide the direct translation, no explanations:
+            "${originalText}"
+        `;
+        
+        const translation = await fetchGeminiResponse(translationPrompt);
+        
+        const translationSpan = document.createElement('span');
+        translationSpan.classList.add('translation-text');
+        translationSpan.textContent = ` (${translation.trim()})`;
+        element.appendChild(translationSpan);
+    } catch (error) {
+        console.error('翻译失败:', error);
+        alert('翻译失败，请重试');
+    }
+}
+
 // 修改初始化场景函数
 async function initializeScenario() {
     try {
@@ -99,11 +128,18 @@ async function initializeScenario() {
         currentCharacter = scenario.character;
         
         document.getElementById('scenario').innerHTML = `
-            <h3>Scene：${currentScenario}</h3>
-            <p>Character：${currentCharacter}</p>
-            <p class="hint">点击"换个场景"按钮可以更换场景和对话对象。点击"对方主动"按钮让对方开始对话。</p>
+            <div class="scene-info">
+                <h3>
+                    Scene：${currentScenario}
+                    <button class="translate-btn" onclick="translateScenarioInfo(this.parentElement, 'scene')">翻译</button>
+                </h3>
+                <p>
+                    Character：${currentCharacter}
+                    <button class="translate-btn" onclick="translateScenarioInfo(this.parentElement, 'character')">翻译</button>
+                </p>
+                <p class="hint">点击"换个场景"按钮可以更换场景和对话对象。点击"对方主动"按钮让对方开始对话。</p>
+            </div>
         `;
-        // 移除了自动调用 characterInitiate()
     } catch (error) {
         console.error('初始化场景失败:', error);
         document.getElementById('scenario').innerHTML = `
@@ -149,14 +185,21 @@ async function applyCustomScenario() {
         
         // 更新显示
         document.getElementById('scenario').innerHTML = `
-            <h3>Scene：${currentScenario}</h3>
-            <p>Character：${currentCharacter}</p>
-            <p class="hint">点击"换个场景"按钮可以更换场景和对话对象。点击"对方主动"按钮让对方开始对话。</p>
+            <div class="scene-info">
+                <h3>
+                    Scene：${currentScenario}
+                    <button class="translate-btn" onclick="translateScenarioInfo(this.parentElement, 'scene')">翻译</button>
+                </h3>
+                <p>
+                    Character：${currentCharacter}
+                    <button class="translate-btn" onclick="translateScenarioInfo(this.parentElement, 'character')">翻译</button>
+                </p>
+                <p class="hint">点击"换个场景"按钮可以更换场景和对话对象。点击"对方主动"按钮让对方开始对话。</p>
+            </div>
         `;
         
         // 隐藏对话框
         hideCustomDialog();
-        // 移除了自动调用 characterInitiate()
     } catch (error) {
         console.error('设置自定义场景失败:', error);
         alert('设置场景失败，请重试');
@@ -174,26 +217,22 @@ async function sendMessage() {
     // 修改检查提示，分开分析语法错误和表达建议
     const checkPrompt = `
         Analyze this English expression and provide feedback in JSON format.
-        Analyze for both grammar and expression style, providing one formal and one casual alternatives.
+        For better expressions, provide exactly one formal and one casual alternative.
         
         Response format:
         {
             "isCorrect": boolean,
-            "intendedMeaning": "英文说明",
+            "intendedMeaning": "用中文说明用户想表达的意思",
             "grammarErrors": ["错误1", "错误2"],
             "betterExpressions": {
-                "formal": [
-                    {
-                        "expression": "更正式的表达",
-                        "explanation": "用法说明"
-                    }
-                ],
-                "casual": [
-                    {
-                        "expression": "地道口语表达",
-                        "explanation": "用法说明"
-                    }
-                ]
+                "formal": {
+                    "expression": "一个更正式的表达",
+                    "explanation": "用法说明"
+                },
+                "casual": {
+                    "expression": "一个地道的口语表达",
+                    "explanation": "用法说明"
+                }
             }
         }
         
@@ -220,16 +259,14 @@ async function sendMessage() {
                 
                 // 显示更好的表达方式
                 if (analysis.betterExpressions) {
-                    if (analysis.betterExpressions.formal && analysis.betterExpressions.formal.length > 0) {
-                        message += `Formally：\n${analysis.betterExpressions.formal
-                            .map((item, i) => `${i + 1}. ${item.expression}\n   说明：${item.explanation}`)
-                            .join('\n')}\n\n`;
+                    const { formal, casual } = analysis.betterExpressions;
+                    
+                    if (formal) {
+                        message += `正式表达：\n${formal.expression}\n说明：${formal.explanation}\n\n`;
                     }
                     
-                    if (analysis.betterExpressions.casual && analysis.betterExpressions.casual.length > 0) {
-                        message += `Causally：\n${analysis.betterExpressions.casual
-                            .map((item, i) => `${i + 1}. ${item.expression}\n   说明：${item.explanation}`)
-                            .join('\n')}`;
+                    if (casual) {
+                        message += `口语表达：\n${casual.expression}\n说明：${casual.explanation}`;
                     }
                 }
                 
