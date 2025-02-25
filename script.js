@@ -282,12 +282,24 @@ async function confirmMeaning(isCorrect) {
     document.getElementById('userInput').value = '';
 }
 
-// 添加消息到对话界面
+// 在 addMessageToConversation 函数中修改消息添加逻辑
 function addMessageToConversation(message, type) {
     const conversation = document.getElementById('conversation');
     const messageDiv = document.createElement('div');
     messageDiv.classList.add('message', `${type}-message`);
-    messageDiv.textContent = message;
+    
+    // 创建消息文本元素
+    const messageText = document.createElement('div');
+    messageText.textContent = message;
+    messageDiv.appendChild(messageText);
+    
+    // 添加翻译按钮
+    const translateBtn = document.createElement('button');
+    translateBtn.classList.add('translate-btn');
+    translateBtn.textContent = '翻译';
+    translateBtn.onclick = () => translateMessage(messageText, messageDiv);
+    messageDiv.appendChild(translateBtn);
+    
     conversation.appendChild(messageDiv);
     conversation.scrollTop = conversation.scrollHeight;
     
@@ -296,6 +308,43 @@ function addMessageToConversation(message, type) {
         type: type,
         content: message
     });
+}
+
+// 添加翻译消息的函数
+async function translateMessage(messageElement, container) {
+    const originalText = messageElement.textContent;
+    
+    // 检查是否已经有翻译
+    const existingTranslation = container.querySelector('.translation-message');
+    if (existingTranslation) {
+        existingTranslation.remove();
+        return;
+    }
+    
+    try {
+        const translationPrompt = `
+            Translate the following English text to Chinese. 
+            Only provide the direct translation, no explanations:
+            "${originalText}"
+        `;
+        
+        const translation = await fetchGeminiResponse(translationPrompt);
+        
+        // 创建翻译消息元素
+        const translationDiv = document.createElement('div');
+        translationDiv.classList.add('translation-message');
+        translationDiv.textContent = translation.trim();
+        
+        // 将翻译插入到原消息之后
+        container.appendChild(translationDiv);
+        
+        // 滚动到新内容
+        const conversation = document.getElementById('conversation');
+        conversation.scrollTop = conversation.scrollHeight;
+    } catch (error) {
+        console.error('翻译失败:', error);
+        alert('翻译失败，请重试');
+    }
 }
 
 // 修改API调用函数
