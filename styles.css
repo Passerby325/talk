@@ -13,16 +13,17 @@
 
 /* 黑夜模式 */
 [data-theme="dark"] {
-    --bg-color: #1a1a1a;
-    --container-bg: #2d2d2d;
-    --text-color: #e0e0e0;
-    --scenario-bg: #3d3d3d;
-    --user-msg-bg: #404040;
-    --ai-msg-bg: #2d2d2d;
-    --system-msg-bg: #353535;
-    --system-msg-border: #505050;
-    --confirmation-bg:#712f6f;
+    --bg-color: #121212;             /* 整体背景：极深灰，接近纯黑 */
+    --container-bg: #1E1E1E;          /* 容器背景：略亮于整体背景，层次分明 */
+    --text-color: #e0e0e0;            /* 文字颜色：保证足够对比度，易于阅读 */
+    --scenario-bg: #2C2C2C;           /* 场景背景：比容器背景稍亮，区分场景区域 */
+    --user-msg-bg: #263238;           /* 用户消息背景：深蓝灰色，区别于其他信息 */
+    --ai-msg-bg:   #37474F;           /* AI 消息背景：较亮的蓝灰色，与用户消息形成对比 */
+    --system-msg-bg: #3E2723;         /* 系统消息背景：深红褐色，突出系统提示信息 */
+    --system-msg-border: #5D4037;     /* 系统消息边框：温暖的棕色，加强提示效果 */
+    --confirmation-bg: #6A1B9A;       /* 确认提示背景：深紫色，醒目且与其他部分区分开 */
 }
+
 
 /* 养眼模式 */
 [data-theme="eye-care"] {
