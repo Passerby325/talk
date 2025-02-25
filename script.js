@@ -221,7 +221,7 @@ async function sendMessage() {
         Response format:
         {
             "isCorrect": boolean,
-            "intendedMeaning": "Chinese explanation of user's intent",
+            "intendedMeaning": "用中文解释用户的意图",
             "grammarErrors": [
                 {
                     "error": "The actual error, e.g., 'hwllo'",
